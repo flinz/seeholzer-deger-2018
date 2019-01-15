@@ -1,0 +1,15 @@
+nest_build
+nest_module_build
+nest_module/libltdl
+nest_module/autom4te.cache
+nest_module/aclocal.m4
+nest_module/compile
+nest_module/config.guess
+nest_module/config.sub
+nest_module/configure
+nest_module/depcomp
+nest_module/install-sh
+nest_module/ltmain.sh
+nest_module/Makefile.in
+nest_module/missing
+nest_module/mymodule_config.h.in
