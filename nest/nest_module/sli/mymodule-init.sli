@@ -1,5 +1,5 @@
 /*
- *  example.sli
+ *  mymodule-init.sli
  *
  *  This file is part of NEST.
  *
@@ -19,18 +19,10 @@
  *  along with NEST.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-(mymodule) Install ;
-0 << /overwrite_files true >> SetStatus
-/pif_psc_alpha Create /a Set
-/pif_psc_alpha Create /b Set
-a b /drop_odd_synapse Connect
-/dc_generator Create /dc Set
-dc << /amplitude 100.0 >> SetStatus
-0 /resolution get /h Set
-/voltmeter Create /vm Set vm << /interval h /precision 10 /scientific true /record_to [/file] /withgid true /withtime true >> SetStatus
-vm a Connect
-vm b Connect
-dc 1 Connect
-1000 Simulate
 
+/*
+ * Initialization file for MyModule.
+ * Run automatically when MyModule is loaded.
+ */
 
+M_DEBUG (mymodule.sli) (Initializing SLI support for MyModule.) message

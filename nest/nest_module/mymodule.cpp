@@ -86,5 +86,5 @@ mynest::MyModule::commandstring( void ) const
 void
 mynest::MyModule::init( SLIInterpreter* i )
 {
-  //nest::TopologyModule::register_parameter<GaussianNoisyParameter>("gaussian_noisy");
+  nest::TopologyModule::register_parameter<GaussianNoisyParameter>("gaussian_noisy");
 } // MyModule::init()

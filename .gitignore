@@ -13,3 +13,6 @@ nest_module/ltmain.sh
 nest_module/Makefile.in
 nest_module/missing
 nest_module/mymodule_config.h.in
+nest/nest_module/libltdl
+nest/nest_module/autom4te.cache
+nest_unused
