@@ -1,0 +1,6 @@
+.git
+db/database.sqlite3
+nest_unused
+nest/nest_build
+nest/nest_module_build
+nest/nest_src/.git
