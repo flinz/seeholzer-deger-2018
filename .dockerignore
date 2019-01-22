@@ -4,3 +4,6 @@ nest_unused
 nest/nest_build
 nest/nest_module_build
 nest/nest_src/.git
+*/__pycache__
+*.pyc
+Dockerfile

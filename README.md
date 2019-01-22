@@ -10,14 +10,16 @@ This repository contains code accompanying the publication by Alexander Seeholze
 * cython 0.23.4 (tested) or higher
 * python 2.7
 
-### Docker image (preferred way)
+### Build via docker image (the easy way)
 ```
+git clone --recursive https://github.com/flinz/seeholzer-deger-2018.git
 docker build -t seeholzer/2019 .
 docker run -it --rm seeholzer/2019 /bin/bash
 ```
 
-### Build locally
+### Build locally (the harder way)
 Makes Nest & installs python dependencies.
 ```
+git clone --recursive https://github.com/flinz/seeholzer-deger-2018.git
 make
 ```
