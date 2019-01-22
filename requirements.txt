@@ -1,6 +1,6 @@
 Cython==0.23.4
 dill==0.2.4
-h5py==2.5.0
+h5py
 matplotlib
 interval==1.0.0
 git+https://github.com/flinz/NeuroTools.git@numpy12#egg=NeuroTools

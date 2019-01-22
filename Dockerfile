@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y \
         python-matplotlib \
         python-scipy \
         python-pip \
+        python-h5py \
         cython=0.23.4-0ubuntu5 && \
         apt-get autoremove -y && \
         rm -rf /var/lib/apt/lists/* && \
@@ -48,7 +49,7 @@ COPY nest /seeholzer-deger-2018/nest
 WORKDIR /seeholzer-deger-2018/
 RUN make nest
 COPY . /seeholzer-deger-2018
-RUN HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 ENV PYTHONPATH="/seeholzer-deger-2018/nest/nest_build/lib/python2.7/site-packages:/seeholzer-deger-2018/nest/nest_build/lib64/python2.7/site-packages:${PYTHONPATH}"
 ENV PATH="/seeholzer-deger-2018/nest/nest_build/bin:${PATH}"
