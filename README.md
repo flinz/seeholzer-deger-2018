@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/flinz/seeholzer-deger-2018.svg?branch=master)](https://travis-ci.com/flinz/seeholzer-deger-2018)
+
 # seeholzer-deger-2018
 
 This repository contains code accompanying the publication by Alexander Seeholzer, Moritz Deger & Wulfram Gerstner: [Stability of working memory in continuous attractor networks under the control of short-term plasticity](https://www.biorxiv.org/content/early/2018/09/23/424515.1).
