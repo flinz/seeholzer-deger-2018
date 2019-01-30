@@ -2,7 +2,7 @@
 
 # seeholzer-deger-2018
 
-This repository contains code accompanying the publication:
+Spiking neuronal network simulations (Python, NEST Simulator) for continuous attractor working memory networks with short-term plasticity. This repository contains code accompanying the publication:
 
 A. Seeholzer, M. Deger, and W. Gerstner, “[Stability of working memory in continuous attractor networks under the control of short-term plasticity][1],” bioRxiv, p. 424515, Sep. 2018.
 
