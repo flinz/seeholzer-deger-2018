@@ -47,7 +47,6 @@ gen_params_baserate = {
     "show_weights": False,
     "show_results": False,
     "show_spikes": False,
-    "show_dist": False,
 
     "bump_shape_enddist": 100, # end of bump averaging (reverse from tmax)
     "bump_i_rates_enddist": 300, # end of bump averaging (reverse from tmax)
@@ -63,7 +62,7 @@ gen_params_baserate = {
     mpr.EL_SEED: None,
 
     # start signal
-    "sig_rate": 2000.,
+    "sig_rate": 3000.,
     "sig_start": 500.,
     "sig_len": 1000.,
     "sig_fade": True,
@@ -409,15 +408,16 @@ class nest_simulator:
 
         if self.params["gen"]["base_seed_run"] is not None:
             print "Using preset seed for run: %i" % self.params["gen"]["base_seed_run"]
-            np.random.seed(self.params["gen"]["base_seed_run"])
+            msd = self.params["gen"]["base_seed_run"]
         else:
             print "Using random seed for run: seeding by time."
             np.random.seed(int(time.time()))
+            msd = np.random.randint(100000000000)
 
-        msd = np.random.randint(100000000000)
+        self.params["gen"]["base_seed_run"] = msd
         nest.SetKernelStatus({'rng_seeds' : range(msd+N_vp+1, msd+2*N_vp+1)})
         nest.SetKernelStatus({'grng_seed' : msd+N_vp})
-        self.params["gen"]["base_seed_run"] = msd
+
 
         # READOUTS ----------------------- # 
         # spike detectors
@@ -510,25 +510,11 @@ class nest_simulator:
         if self.params["gen"]["show_results"] or self.params["gen"]["show_spikes"]:   
             nest.raster_plot.from_device(ex_spikes, hist=True)
             pl.title("Exctitatory Population")
+            pl.savefig('lastrun_spikes_e.pdf')
             nest.raster_plot.from_device(in_spikes, hist=True)
             pl.title("Inhibitory Population")
-            pl.figure()
-            pl.imshow(act, aspect='auto', origin='lower')
-            pl.colorbar()
-        
-        if self.params["gen"]["show_results"] or self.params["gen"]["show_dist"]:
-            pl.figure()
-            pl.subplot(2,1,1)
-            pl.imshow(out_means,origin="lower",aspect="auto")
-            pl.plot([dirs_bump[j] for j in points],c="#000000")
-            pl.plot(np.ones(out_means.shape[1])*len(act_bump)/2.,c='r',lw=2.)
-            pl.subplot(2,1,2)
-            xv_data = np.arange(len(act_bump))/float(len(act_bump))*2.*np.pi-np.pi
-            pl.plot(xv_data,np.mean(out_means,1),lw=1.,alpha=1.)
-            pl.fill_between(xv_data,np.mean(out_means,1)-np.std(out_means,1), np.mean(out_means,1)+np.std(out_means,1),
-            alpha=0.2, edgecolor="#222222", facecolor="#dddddd",
-            antialiased=True)
-            
+            pl.savefig('lastrun_spikes_i.pdf')
+
         return {
             "shape_mean": np.mean(out_means,1),
             "shape_std": np.std(out_means,1),
