@@ -39,10 +39,7 @@ def get_network(id, session=None):
     if session == None:
         _, _, session = db_connection()
     network = session.query(Network).filter(Network.id == id).options(joinedload('*')).one()
-    return {
-        "session": session,
-        "network": network
-    }
+    return session, network
 
 
 def print_latex_tables_synpars(exp_ids):
@@ -91,7 +88,7 @@ def print_latex_tables_synpars(exp_ids):
     print out
 
 
-def print_networks(exp_ids):
+def print_networks(exp_ids=[4,5,6]):
     variables = ["U", "tau_f", "tau_r"]
     output = ["U", "tau_f", "tau_x"]
 

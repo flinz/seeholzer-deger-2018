@@ -17,6 +17,7 @@ def test_network_sim():
     net = s.query(cb.Network).filter(cb.Network.id == 45).one()
     handler = erfs.MeanfieldHandler(net)
 
+    # somewhat legacy parameters for this test run
     std_pars = {
         "show_results": False,
         "id": net.id,
@@ -32,7 +33,8 @@ def test_network_sim():
         "sig_len": 1000.,
         "sig_weight": .4,
         "sig_width": .2,
-        "base_seed_run": 1,
+        "sig_rate": 2000.,
+        "base_seed_run": 25757712619,
         "base_seed": 29529492,
 
         # runtime
