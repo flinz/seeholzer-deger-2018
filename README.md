@@ -146,7 +146,7 @@ The simulation type `SimBump` from `simulation.sim_types` implements running of 
 and saves all simulation data (including spike times). This can be used to investigate 
 the shape of bump firing-rate distributions, for example.
 
-See [scripts/run_bump.py](tree/master/scripts/run_bump.py) for an example of how to use the interface. Below, we show the essentials from this file:
+See [scripts/run_bump.py](scripts/run_bump.py) for an example of how to use the interface. Below, we show the essentials from this file:
 
 ```python
 import tools.db
@@ -213,7 +213,7 @@ To save space, this simulation type saves only bump center positions together wi
 This can be used to investigate the effect of different frozen noise values on the
 drift and diffusion of bumps, as measured by their center positions.
 
-See [scripts/run_drift.py](tree/master/scripts/run_drift.py) a demonstration of the usage of the interface.
+See [scripts/run_drift.py](scripts/run_drift.py) for a demonstration of the usage of the interface.
 Below, we show the essential parts of this file:
 
 ```python
