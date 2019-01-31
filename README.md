@@ -6,6 +6,25 @@ Spiking neuronal network simulations (Python, NEST Simulator) for continuous att
 
 A. Seeholzer, M. Deger, and W. Gerstner, “[Stability of working memory in continuous attractor networks under the control of short-term plasticity][1],” bioRxiv, p. 424515, Sep. 2018.
 
+## Contents
+
+  * [Installation](#installation)
+    + [Minimum dependencies](#minimum-dependencies)
+    + [Build via docker image (the easy way)](#build-via-docker-image--the-easy-way-)
+    + [Build locally (the harder way)](#build-locally--the-harder-way-)
+  * [Networks](#networks)
+    + [Available networks](#available-networks)
+    + [Neuron parameters](#neuron-parameters)
+  * [Running simulations](#running-simulations)
+    + [SimBump: Single bump trajectory](#simbump--single-bump-trajectory)
+      - [Plots](#plots)
+        * [Excitatory firing rates (filtered spikes)](#excitatory-firing-rates--filtered-spikes-)
+        * [Mean firing rates (rectified)](#mean-firing-rates--rectified-)
+    + [SimDrift: Repeated bump trajectories (drift profiles)](#simdrift--repeated-bump-trajectories--drift-profiles-)
+      - [Plots](#plots-1)
+        * [Drift profile](#drift-profile)
+  * [Data files](#data-files)
+    + [Opening data files](#opening-data-files)
 
 ## Installation
 
@@ -185,7 +204,7 @@ pl.savefig('out_mean.pdf')
 
 ![Mean firing rates (rectified)](docs/img/run_bump_mean.png)
 
-# SimDrift: Repeated bump trajectories (drift profiles)
+### SimDrift: Repeated bump trajectories (drift profiles)
 
 The simulation type `SimDrift` from `simulation.sim_types` implements 
 running several bump trajectories from equally spaced initial positions with repetitions. 
@@ -194,8 +213,8 @@ To save space, this simulation type saves only bump center positions together wi
 This can be used to investigate the effect of different frozen noise values on the
 drift and diffusion of bumps, as measured by their center positions.
 
-See [scripts/run_drift.py](tree/master/scripts/run_drift.py) for the function `run_drift`, that demonstrates the usage of the interface.
-Below, we show the essential parts of the interface as used in this function:
+See [scripts/run_drift.py](tree/master/scripts/run_drift.py) a demonstration of the usage of the interface.
+Below, we show the essential parts of this file:
 
 ```python
 import tools.db
