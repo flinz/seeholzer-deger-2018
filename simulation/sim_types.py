@@ -281,7 +281,7 @@ class SimDrift(SimWrapper):
     def __init__(self, **kwargs):
         SimWrapper.__init__(self, **kwargs)
 
-    def run(self, handler, initials=2, reps=1, cores=2, tmax=1000., do_only_setup=False, **kwargs):
+    def run(self, handler, initials=2, reps=1, cores=2, tmax=1000., base_seed_run=None, do_only_setup=False, **kwargs):
 
         self.prep_file(handler, suffix=get_suffix(kwargs))
 
@@ -302,14 +302,27 @@ class SimDrift(SimWrapper):
         pop_rate_e = data_file.create_dataset("pop_rate_e",(initials,reps,))
         pop_rate_i = data_file.create_dataset("pop_rate_i",(initials,reps,))
 
-        for i,init_pos in enumerate(init_positions):
+        for i, init_pos in enumerate(init_positions):
 
             for r in range(reps):
 
+                print "\n" + "#" * 15 + \
+                      "\nRunning repetition %i/%i of center position %g" % (r+1, reps, init_pos) + \
+                      "\n" + "#" * 15 + "\n"
+
                 sim = nest_simulator(handler, cores=cores)
                 sim.set_paramset("bump")
-                gen_params = {}
+                gen_params = {
+                    "sig_center": init_pos,
+                }
                 gen_params.update(kwargs)
+
+                # set base seed for run to something reproducible
+                # but changing over each repetition and position
+                if base_seed_run is not None:
+                    base_seed_run_rep = base_seed_run + r * cores + i * reps * cores
+                    gen_params.update({"base_seed_run": base_seed_run_rep})
+
                 sim.set_params("gen", tmax=tmax, cores=cores, **gen_params)
 
                 sim_ret = sim.run(do_only_setup)
@@ -359,18 +372,19 @@ class SimDrift(SimWrapper):
 
         return {"w_mat": w_mat, "dump": test_dump}
 
-    def plot_drift_runs(
-        self, ax, selectors=None, flip_y=0.,
-        tmax_s=10., tmin_s=0., every_nth=1, every_nth_init=1,
-        rasterized=True, color_lr=None, lw=.8, **kwargs):
+    def plot_drift(
+            self, ax=None, selectors=None, flip_y=0.,
+            tmax_s=None, tmin_s=0., every_nth=1, every_nth_init=1,
+            rasterized=True, color_lr=None, lw=.8, **kwargs):
 
-        import pylab as pl
+        if ax is None:
+            pl.figure(figsize=(10, 5))
+            ax = pl.subplot(111)
+
         init_positions = self.data_file.attrs["init_positions"]
         gen_params = self.get_gen_params()
 
         dirs = self.data_file["dirs"].value
-
-        print dirs.shape
 
         inits = dirs.shape[0]
         reps = dirs.shape[1]
@@ -379,9 +393,11 @@ class SimDrift(SimWrapper):
         if color_lr:
             colval = lambda j: color_lr[int(j >= inits/2)]
 
-        tmax = tmax_s
+        tmax = times/1e3
+        if tmax_s is not None:
+            tmax = tmax_s
         tmin = tmin_s
-
+        print(tmax)
         if selectors:
             assert len(selectors) == inits
 
@@ -401,7 +417,6 @@ class SimDrift(SimWrapper):
 
                     pos = np.where(np.abs(np.diff(dirs_)) >= 400.)[0]
 
-                    # print pos
                     if len(pos)>0:
                         dirs_[pos] = np.nan
                         xdim[pos] = np.nan
@@ -421,8 +436,8 @@ class SimDrift(SimWrapper):
 
         xlim = (tmin,tmax)
         ylim = (0,799)
-        xlabel=r"$t$ [s]"
-        ylabel=r"$\varphi$"
+        xlabel=r"Time [s]"
+        ylabel=r"Center position $\varphi$"
         xticks = [0,400,800]
         yticks = np.arange(xlim[0],np.floor(xlim[1]),2.)
 
@@ -431,7 +446,6 @@ class SimDrift(SimWrapper):
             ylim = (ylim[1],ylim[0])
             xlabel,ylabel = ylabel,xlabel
             xticks,yticks = yticks,yticks
-        #print xlim
         
         ax.set_xlim(xlim)
         ax.set_ylim(ylim)
