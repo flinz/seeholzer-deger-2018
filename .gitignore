@@ -16,3 +16,4 @@ nest/nest_module/ltmain.sh
 nest/nest_module/Makefile.in
 nest/nest_module/missing
 nest/nest_module/mymodule_config.h.in
+data/drift

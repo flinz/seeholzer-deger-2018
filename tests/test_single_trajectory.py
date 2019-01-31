@@ -10,11 +10,7 @@ from classes.static import MeanfieldParameters as mpr
 
 def test_network_sim():
 
-    a, b, _ = tools.db.db_connection()
-    b.configure(autoflush=False)
-    s = b()
-
-    net = s.query(cb.Network).filter(cb.Network.id == 45).one()
+    session, net = tools.db.get_network(45)
     handler = erfs.MeanfieldHandler(net)
 
     # somewhat legacy parameters for this test run

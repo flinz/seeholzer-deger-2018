@@ -19,7 +19,6 @@ wrapper = btype.get_wrapper(to_memory=True, session=session)
 
 # parameters for simulation
 sim_params = {
-    "show_results": True,  # plot results
     "cores": 4,  # cores to use for sim
     "sig_center": 0.3,  # center of signal
     "tmax": 8000.,  # runtime

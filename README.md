@@ -121,19 +121,26 @@ Simulations use
 
 See below for examples of how to run a single bump trajectory, or several bump trajectories at once. 
 
-### Single bump trajectory
+### SimBump: Single bump trajectory
 
 The simulation type `SimBump` from `simulation.sim_types` implements running of a single bump trajectory, 
 and saves all simulation data (including spike times). This can be used to investigate 
 the shape of bump firing-rate distributions, for example.
 
-See [scripts/run_bump.py](tree/master/scripts/run_bump.py) for an example of how to use the interface:
+See [scripts/run_bump.py](tree/master/scripts/run_bump.py) for an example of how to use the interface. Below, we show the essentials from this file:
 
 ```python
+import tools.db
+import meanfield.error_functions as erfs
+import classes.base as cb
+from classes.static import MeanfieldParameters as mpr
+
+session, net = tools.db.get_network(45)
+
 # get meanfield handler (abstracts network parameter handling) and set connectivity parameter
 handler = erfs.MeanfieldHandler(net)
 
-# get simulation type
+# get simulation type "bump" = SimBump
 btype = session.query(cb.SimType).filter(cb.SimType.name == "bump").one()
 
 # get simulation wrapper
@@ -141,7 +148,6 @@ wrapper = btype.get_wrapper(to_memory=True, session=session)
 
 # parameters for simulation
 sim_params = {
-    "show_results": True,  # plot results
     "cores": 4,  # cores to use for sim
     "sig_center": 0.3,  # center of signal
     "tmax": 8000.,  # runtime
@@ -159,7 +165,7 @@ wrapper.run(handler, **sim_params)
 
 #### Plots
 
-The wrapper provides the following plots after running
+The `SimBump` wrapper provides the following plots after running
 
 ##### Excitatory firing rates (filtered spikes)
 
@@ -179,10 +185,94 @@ pl.savefig('out_mean.pdf')
 
 ![Mean firing rates (rectified)](docs/img/run_bump_mean.png)
 
-# Repeated bump trajectories (drift profiles)
+# SimDrift: Repeated bump trajectories (drift profiles)
 
 The simulation type `SimDrift` from `simulation.sim_types` implements 
 running several bump trajectories from equally spaced initial positions with repetitions. 
 To save space, this simulation type saves only bump center positions together with aggregate data, but no spike times.
+
+This can be used to investigate the effect of different frozen noise values on the
+drift and diffusion of bumps, as measured by their center positions.
+
+See [scripts/run_drift.py](tree/master/scripts/run_drift.py) for the function `run_drift`, that demonstrates the usage of the interface.
+Below, we show the essential parts of the interface as used in this function:
+
+```python
+import tools.db
+import meanfield.error_functions as erfs
+import classes.base as cb
+from classes.static import MeanfieldParameters as mpr
+
+session, net = tools.db.get_network(45)
+
+# get meanfield handler (abstracts network parameter handling) and set connectivity parameter
+handler = erfs.MeanfieldHandler(net)
+
+# get simulation type "drift"
+btype = session.query(cb.SimType).filter(cb.SimType.name == "drift").one()
+
+# get simulation wrapper
+# set to_memory = False to save simulation to hdf5 file
+wrapper = btype.get_wrapper(to_memory=True, session=session)
+
+# parameters for simulations
+# this will simulate 10 initial bump positions
+# with 5 repetitions each
+# running until 8000 ms time each
+gen_params = {
+    "reps": 5,
+    "tmax": 8000.,
+    "initials": 10,
+
+    # network noise parameters
+    mpr.W_NOISE: 0.,  # sigma_w
+    mpr.EL_NOISE: 0.,  # = sigma_L
+    mpr.P_EE: 1.0,  # recurrent connectivity p
+}
+
+# run the simulation
+wrapper.run(handler, **gen_params)
+```
+
+#### Plots
+
+The `SimDrift` wrapper provides the following plots after running
+
+##### Drift profile
+
+Shows all bump centers of the simulated trajectories overlayed.
+
+```python
+wrapper.plot_drift()
+pl.savefig('out_drift.png')
+```
+![Drift profile: bump trajectories of the same network instantiation](docs/img/run_drift.png)
+
+
+## Data files
+
+Simulations run with `to_memory=False` are saved in the folders `data/bump`
+(for `SimBump` simulations) and `data/drift` (for `SimDrift` simulations) in the [HDF5](https://en.wikipedia.org/wiki/Hierarchical_Data_Format) 
+file format. The filename is automatically generated, and is printed in the beginning of the simulation run. 
+
+### Opening data files
+
+The network instantiation including all parameters is saved alongside the simulation data,
+and can be opened as follows:
+
+```python
+import simulation.sim_types as st
+import tools.db
+
+fn = 'data/sim/example.hdf5'  # filename
+_, _, s = tools.db.db_connection()
+wrapper = st.SimWrapper(data_filename=fn, session=s)  # get a general wrapper from the hdf5 file
+wrapper = wrapper.sim_file.get_wrapper()  # gets the wrapper subclass instance from the file
+
+wrapper.plot_drift()  # plot saved data
+wrapper.get_gen_params()  # get parameters used for simulation
+
+net = wrapper.sim_file.network  # get network used for simulation
+```  
 
 [1]: https://www.biorxiv.org/content/10.1101/424515v2
