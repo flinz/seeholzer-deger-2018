@@ -1,0 +1,11 @@
+Cython==0.23.4
+dill==0.2.4
+h5py
+matplotlib
+interval==1.0.0
+git+https://github.com/flinz/NeuroTools.git@numpy12#egg=NeuroTools
+numpy==1.14.0
+SQLAlchemy==0.9.8
+backports-functools_lru_cache
+ipython
+pytest
