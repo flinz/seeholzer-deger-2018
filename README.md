@@ -37,15 +37,23 @@ A. Seeholzer, M. Deger, and W. Gerstner, “[Stability of working memory in cont
 ### Build via docker image (the easy way)
 ```
 git clone --recursive https://github.com/flinz/seeholzer-deger-2018.git
-docker build -t seeholzer/2019 .
-docker run -it --rm seeholzer/2019 /bin/bash
+docker build -t seeholzer/2018 .
+docker run -it --rm seeholzer/2018 /bin/bash
+```
+
+The code will be contained in the directory `/seeholzer-deger-2018` in the docker image. You can also mount a local directory into the docker container by specifying a flag `-v local:mounted` in the `docker run` command.
+
+For example:
+```
+docker run -v /home/me/my_code:/my_code -it --rm seeholzer/2018 /bin/bash
 ```
 
 ### Build locally (the harder way)
-Makes Nest & installs python dependencies.
+Makes Nest & installs python dependencies. Final step sets environment variables that will add NEST to Python.
 ```
 git clone --recursive https://github.com/flinz/seeholzer-deger-2018.git
 make
+source set_vars.sh
 ``` 
 
 ## Networks
