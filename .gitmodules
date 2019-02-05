@@ -1,0 +1,4 @@
+[submodule "nest_src"]
+	path = nest/nest_src
+	url = https://github.com/flinz/nest-simulator.git
+	branch = seeholzer_biorxiv_2019
