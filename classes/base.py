@@ -51,6 +51,7 @@ class DictMixin(object):
 
 
 class Paramset(Base, NameRepr, DictMixin):
+    """Parameter set that stores a JSON python dictionary of network parameters"""
     __tablename__ = prefix + '_paramset'
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
 
@@ -100,7 +101,7 @@ def stp_dgl_u(U, tau_f, tau_r, rate_ms):
 
 def stp_dgl_r(U, tau_f, tau_r, rate_ms):
     return (1. + float(U) * rate_ms * tau_f) * (
-                1. + float(U) * rate_ms * (tau_f + tau_r + rate_ms * tau_f * tau_r)) ** (-1.)
+            1. + float(U) * rate_ms * (tau_f + tau_r + rate_ms * tau_f * tau_r)) ** (-1.)
 
 
 def stp_dgl_u_nobase(U, tau_f, tau_r, rate_ms):
@@ -112,6 +113,7 @@ def stp_dgl_r_nobase(U, tau_f, tau_r, rate_ms):
 
 
 class Synapse(Base):
+    """Synapse that can be facilitating and depressing"""
     __tablename__ = prefix + '_synapse'
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
 
@@ -147,7 +149,7 @@ class Synapse(Base):
 
     def __repr__(self):
         return "Synapse (U: %.3f, tau_f: %.1f, tau_r: %.1f, is_nmda: %s)" % (
-        self.U, self.tau_f, self.tau_r, self.is_nmda)
+            self.U, self.tau_f, self.tau_r, self.is_nmda)
 
     def __init__(self, U=1., tau_f=0., tau_r=0., tau_post=100., is_nmda=False, fit_type=2):
         self.U = U
@@ -240,6 +242,7 @@ class Synapse(Base):
 
 
 class NeuronModel(Base, NameRepr):
+    """Neuron models"""
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
     __tablename__ = prefix + '_neuron_model'
 
@@ -259,6 +262,7 @@ class NeuronModel(Base, NameRepr):
 
 
 class Population(Base, NameRepr):
+    """Population of neurons"""
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
     __tablename__ = prefix + '_population'
 
@@ -287,6 +291,7 @@ class Population(Base, NameRepr):
 
 
 class Network(Base, NameRepr):
+    """Network consisting of an e and an i population of neurons"""
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
     __tablename__ = prefix + '_network'
 
@@ -331,6 +336,7 @@ post_keywords = Table(prefix + '_experiments_simfiles', Base.metadata,
 
 
 class ExperimentSet(Base, NameRepr):
+    """Set of networks used for experiments"""
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
     __tablename__ = prefix + '_experiment_set'
 
@@ -342,6 +348,7 @@ class ExperimentSet(Base, NameRepr):
 
 
 class Experiment(Base, NameRepr):
+    """Experiment, e.g. investigating the bump shape, on a given set of neurons (ExperimentSet)."""
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
     __tablename__ = prefix + '_experiment'
 
@@ -357,6 +364,7 @@ class Experiment(Base, NameRepr):
 
 
 class SimType(Base, NameRepr):
+    """Simulation type, e.g. SimBump and SimDrift"""
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
     __tablename__ = prefix + '_sim_type'
 
@@ -370,6 +378,7 @@ class SimType(Base, NameRepr):
 
 
 class SimFile(Base):
+    """File that stores simulation results along with reference to network and sim type used"""
     __table_args__ = {'mysql_engine': 'InnoDB', 'sqlite_autoincrement': True}
     __tablename__ = prefix + '_sim_file'
 
@@ -397,6 +406,7 @@ class SimFile(Base):
 
 
 class SimRun(Base):
+    """Storage of simulation data in the DB"""
     __tablename__ = prefix + '_sim_run'
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
