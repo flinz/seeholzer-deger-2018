@@ -1,14 +1,16 @@
 import matplotlib
 matplotlib.use('pdf')
 import numpy as np
-from simulation.nest_simulation import nest_simulator
+from simulation.nest_simulation import NestSimulator
 import meanfield.error_functions as erfs
-import classes.base as cb
 import tools.db
 from classes.static import MeanfieldParameters as mpr
 
 
 def test_network_sim():
+    """
+    Test single trajectory without using simtypes
+    """
 
     session, net = tools.db.get_network(45)
     handler = erfs.MeanfieldHandler(net)
@@ -38,7 +40,7 @@ def test_network_sim():
     }
 
     handler.set_states({ mpr.W_J: net.e.paramset.parameters['w_0'] + net.e.paramset.parameters['w_1']})
-    sim = nest_simulator(handler, cores=4)
+    sim = NestSimulator(handler, cores=4)
     sim.set_paramset("bump")
     sim.set_params("gen", **std_pars)
 

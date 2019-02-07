@@ -193,9 +193,9 @@ class SimBump(SimWrapper):
 
         self.prep_file(handler)
 
-        from simulation.nest_simulation import nest_simulator
+        from simulation.nest_simulation import NestSimulator
 
-        sim = nest_simulator(handler, cores=cores)
+        sim = NestSimulator(handler, cores=cores)
         sim.set_paramset("bump")
         sim.set_params("gen", tmax=tmax, **kwargs)
 
@@ -215,6 +215,8 @@ class SimBump(SimWrapper):
         act_set[:] = sim_ret["dirs"]
 
         self.sim = sim
+
+        return self.data_file
 
     def plot_mean(self, ax=None):
 
@@ -287,7 +289,7 @@ class SimDrift(SimWrapper):
 
         data_file = self.data_file
 
-        from simulation.nest_simulation import nest_simulator
+        from simulation.nest_simulation import NestSimulator
 
         init_positions = np.arange(0.,1.,1./float(initials))
 
@@ -310,7 +312,7 @@ class SimDrift(SimWrapper):
                       "\nRunning repetition %i/%i of center position %g" % (r+1, reps, init_pos) + \
                       "\n" + "#" * 15 + "\n"
 
-                sim = nest_simulator(handler, cores=cores)
+                sim = NestSimulator(handler, cores=cores)
                 sim.set_paramset("bump")
                 gen_params = {
                     "sig_center": init_pos,
@@ -340,12 +342,12 @@ class SimDrift(SimWrapper):
 
     def get_w_mat(self, handler, cores=2, **kwargs):
 
-        from simulation.nest_simulation import nest_simulator
+        from simulation.nest_simulation import NestSimulator
 
         print "################"
         print "Using %i cores! Made sure the number is the same as the original run?" % cores
         print "################"
-        sim = nest_simulator(handler, cores=cores)
+        sim = NestSimulator(handler, cores=cores)
         sim.set_paramset("bump")
         gen_params = {
             "sig_start":100.,

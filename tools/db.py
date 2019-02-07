@@ -1,8 +1,6 @@
 import time
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import joinedload, sessionmaker
-
 import classes.base as cb
 from classes.base import (Base, Network, NeuronModel, Paramset, Population,
                           Synapse)
@@ -23,6 +21,11 @@ dbs = {
 
 
 def db_connection(db_name='sqlite'):
+    """
+    Creates SqlAlchemy db connection
+    :param db_name: name of database, supported: "sqlite" and "mysql"
+    :return: SqlAlchemy engine, SqlAlchemy sessionmaker, SqlAlchemy session
+    """
     try:
         engine = create_engine(dbs[db_name]['url'] + dbs[db_name]['schema'], echo=False)
     except ImportError:
@@ -36,13 +39,23 @@ def db_connection(db_name='sqlite'):
 
 
 def get_network(id, session=None):
+    """
+    Gets network object with specified id
+    :param id: id of network
+    :param session: SqlAlchemy session
+    :return: SqlAlchemy session, network
+    """
     if session == None:
         _, _, session = db_connection()
     network = session.query(Network).filter(Network.id == id).options(joinedload('*')).one()
     return session, network
 
 
-def print_latex_tables_synpars(exp_ids):
+def print_latex_tables_synpars(exp_ids=[4,5,6]):
+    """
+    Print latex table of parameters
+    :param exp_ids: Experiment ids
+    """
     variables = ["U", "tau_f", "tau_r", npr.G_NMDA, npr.G_GABA, "w_0", "w_1", "w_sigma"]
 
     out = """\\begin{tabular}{lcc}\n"""
@@ -89,6 +102,11 @@ def print_latex_tables_synpars(exp_ids):
 
 
 def print_networks(exp_ids=[4,5,6]):
+    """
+    Print networks
+    :param exp_ids: Experiment ids
+    :return: list of networks that were printed
+    """
     variables = ["U", "tau_f", "tau_r"]
     output = ["U", "tau_f", "tau_x"]
 
@@ -112,6 +130,14 @@ def print_networks(exp_ids=[4,5,6]):
 
 
 def similar_or_new_net(session, net):
+    """
+    For a given network, compare if we have a similar one in the database, and
+    return this if found, otherwise return new network.
+
+    :param session: SqlAlchemy session
+    :param net: network
+    :return: network
+    """
     # try by id
     ret = session.query(Network).filter(Network.id == net.id).one()
     if ret:

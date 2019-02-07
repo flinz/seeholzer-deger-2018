@@ -252,9 +252,15 @@ gen_params = {
     "initials": 10,
 
     # network noise parameters
-    mpr.W_NOISE: 0.,  # sigma_w
-    mpr.EL_NOISE: 0.,  # = sigma_L
-    mpr.P_EE: 1.0,  # recurrent connectivity p
+    mpr.EL_NOISE: 0.,
+    mpr.P_EE: 1.,  # 1mV of noise on the leak reversal potentials
+    mpr.W_NOISE: 0.,
+
+    # run parameters
+    "cores": 4,  # cores to use for sim
+    "tmax": 8000.,  # runtime
+    "base_seed": 1,  # seed for connectivity noise
+    "base_seed_run": 1,  # seed for run noise
 }
 
 # run the simulation

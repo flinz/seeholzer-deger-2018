@@ -5,7 +5,17 @@ from scipy.optimize import minimize
 from classes.static import MeanfieldParameters as mpr
 
 
-def fit_gauss_curve(ydata, r=4., plot=False, ax=None, dots=False, label=None, **kwargs):
+def fit_gauss_curve(ydata, plot=False, ax=None, dots=False, label=None, **kwargs):
+    """Fit a generalized gaussian to given uniformly spaced datapoints on [-pi,pi)
+
+    :param ydata: data points of measurements uniformly spaced on [-pi,pi)
+    :param plot: do a plot of result
+    :param ax: matplotlib axis to plot to
+    :param dots: scatterplot the original data
+    :param label: plot label
+    :param kwargs: arguments to pass to plotting
+    :return: dict of coefficients and the fitted function
+    """
     def gauss(x, *p):
         g_0, g_1, center, sigma, r = p
         if sigma <= 0:
